@@ -19,14 +19,19 @@ window.onload = function (): void {
     StreamClientScrcpy.registerPlayer(TinyH264Player);
 
     if (action === StreamClientScrcpy.ACTION && typeof parsedQuery.udid === 'string') {
-        StreamClientScrcpy.start(parsedQuery);
+   	console.log('[index] scrcpy start');
+	StreamClientScrcpy.start(parsedQuery);
     } else if (action === StreamClientQVHack.ACTION && typeof parsedQuery.udid === 'string') {
-        StreamClientQVHack.start(parsedQuery);
+        console.log('[index] qvh start');
+	StreamClientQVHack.start(parsedQuery);
     } else if (action === ShellClient.ACTION && typeof parsedQuery.udid === 'string') {
-        ShellClient.start(parsedQuery);
+        console.log('[index] shell start');
+	ShellClient.start(parsedQuery);
     } else if (action === DevtoolsClient.ACTION) {
+	console.log('[index] dvtool start');
         DevtoolsClient.start(parsedQuery);
     } else {
+	console.log('[index] tracker start');
         HostTracker.start();
     }
 };

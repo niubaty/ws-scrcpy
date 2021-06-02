@@ -37,7 +37,7 @@ export class StreamClientQVHack extends BaseClient<ParamsStreamQVHack, never> im
 
     constructor(params: ParsedUrlQuery | ParamsStreamQVHack) {
         super(params);
-
+	console.log('[streamclietqvhack.ts] init');
         this.udid = this.params.udid;
         let udid = this.udid;
         // Workaround for qvh v0.5-beta
@@ -50,6 +50,7 @@ export class StreamClientQVHack extends BaseClient<ParamsStreamQVHack, never> im
         this.startStream(this.udid);
         this.setTitle(`${this.udid} stream`);
         this.setBodyClass('stream');
+	
     }
 
     public parseParameters(params: ParsedUrlQuery): ParamsStreamQVHack {
@@ -62,6 +63,7 @@ export class StreamClientQVHack extends BaseClient<ParamsStreamQVHack, never> im
     }
 
     private onViewVideoResize = (): void => {
+        console.log('[StreamClientQVHack.ts] onviewVideoResize/run wda');
         this.runWebDriverAgent();
     };
     private onInputVideoResize = (screenInfo: ScreenInfo): void => {
@@ -91,6 +93,7 @@ export class StreamClientQVHack extends BaseClient<ParamsStreamQVHack, never> im
     }
 
     private startStream(udid: string) {
+	console.log('[StreamClientQVHack.ts] startstream/reg run wda');
         const player = new MsePlayerForQVHack(udid, MsePlayerForQVHack.createElement(`qvh_video`));
         this.setTouchListeners(player);
         player.pause();
@@ -98,6 +101,7 @@ export class StreamClientQVHack extends BaseClient<ParamsStreamQVHack, never> im
         const deviceView = document.createElement('div');
         deviceView.className = 'device-view';
         const stop = (ev?: string | Event) => {
+            console.log('[StreamClientQvHack] stop');
             if (ev && ev instanceof Event && ev.type === 'error') {
                 console.error(TAG, ev);
             }

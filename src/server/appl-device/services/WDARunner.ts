@@ -16,7 +16,8 @@ export class WDARunner extends TypedEmitter<WDARunnerEvents> {
     private static servers: Map<string, Server> = new Map();
     private static cachedScreenInfo: Map<string, any> = new Map();
     public static getInstance(udid: string): WDARunner {
-        let instance = this.instances.get(udid);
+        console.log('[WDARunner.ts] inst');
+	let instance = this.instances.get(udid);
         if (!instance) {
             instance = new WDARunner(udid);
             this.instances.set(udid, instance);
@@ -31,6 +32,7 @@ export class WDARunner extends TypedEmitter<WDARunnerEvents> {
         let server = this.servers.get(udid);
         if (!server) {
             const port = await portfinder.getPortPromise();
+            console.log('[WDARunner.ts] port: '+port);
             const XCUITest = await import('appium-xcuitest-driver');
             server = await XCUITest.startServer(port, '127.0.0.1');
         }
@@ -43,6 +45,7 @@ export class WDARunner extends TypedEmitter<WDARunnerEvents> {
         }
         const info = await driver.getScreenInfo();
         this.cachedScreenInfo.set(udid, info);
+	console.log('[WDARunner.ts] screeninfo: '+JSON.stringify(info));
         return info;
     }
 
@@ -63,7 +66,7 @@ export class WDARunner extends TypedEmitter<WDARunnerEvents> {
         if (!driver) {
             return;
         }
-
+	console.log('[WDARunner.ts][request] command: '+JSON.stringify(command));
         const method = command.getMethod();
         const args = command.getArgs();
         switch (method) {
@@ -87,6 +90,7 @@ export class WDARunner extends TypedEmitter<WDARunnerEvents> {
     }
 
     public async start(): Promise<void> {
+	console.log('[WDARunner.ts] [start]');
         this.server = await WDARunner.getServer(this.udid);
         try {
             const port = await portfinder.getPortPromise();

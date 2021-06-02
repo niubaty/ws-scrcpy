@@ -143,6 +143,7 @@ export class WsQVHackClient extends ManagerClient<ParamsWdaProxy, WsQVHackClient
     }
 
     public stop(): void {
+        console.log('[WsQVHackClient.ts] stop');
         if (this.stopped) {
             return;
         }

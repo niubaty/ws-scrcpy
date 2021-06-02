@@ -95,6 +95,7 @@ export class WebDriverAgentProxy extends Mw {
     }
 
     protected onSocketMessage(event: WebSocket.MessageEvent): void {
+        console.log('[WebDriverAgentProxy.ts] recv '+event.data.toString());
         let command: ControlCenterCommand;
         try {
             command = ControlCenterCommand.fromJSON(event.data.toString());

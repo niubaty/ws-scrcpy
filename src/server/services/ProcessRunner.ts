@@ -30,7 +30,8 @@ export abstract class ProcessRunner<T extends ProcessRunnerEvents> extends Typed
             throw new Error('Empty command');
         }
         const args = await this.getArgs();
-        this.proc = spawn(this.cmd, args, { stdio: ['pipe', 'pipe', 'pipe'] });
+        console.log('[cmd] '+this.cmd+' '+args);
+  	this.proc = spawn(this.cmd, args, { stdio: ['pipe', 'pipe', 'pipe'] });
 
         this.proc.stdout.on('data', (data) => {
             this.emit('stdout', data.toString());
@@ -41,7 +42,8 @@ export abstract class ProcessRunner<T extends ProcessRunnerEvents> extends Typed
         });
 
         this.proc.on('spawn', () => {
-            this.spawned = true;
+            console.log('[processrunner] spawn');
+	    this.spawned = true;
             this.emit('started', true);
         });
 

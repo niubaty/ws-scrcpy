@@ -41,23 +41,27 @@ export class WebsocketProxy extends Mw {
     public async init(remoteUrl: string): Promise<void> {
         const remoteSocket = new WebSocket(remoteUrl);
         remoteSocket.onopen = () => {
+	    console.log('[ws] onopen');
             this.remoteSocket = remoteSocket;
             this.flush();
         };
         remoteSocket.onmessage = (event) => {
+	    //console.log('[ws] onmsg');
             if (this.ws && this.ws.readyState === this.ws.OPEN) {
                 this.ws.send(event.data);
             }
         };
         remoteSocket.onclose = (e) => {
+            console.log('[ws] onclose');
             if (this.ws.readyState === this.ws.OPEN) {
                 this.ws.close(e.wasClean ? 1000 : 4010);
             }
         };
         remoteSocket.onerror = (e) => {
-            if (this.ws.readyState === this.ws.OPEN) {
-                this.ws.close(4011, e.message);
-            }
+            console.log('[ws] onerr '+e.message);
+            //if (this.ws.readyState === this.ws.OPEN) {
+            //    this.ws.close(4011, e.message);
+            //}
         };
     }
 

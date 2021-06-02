@@ -28,8 +28,10 @@ export abstract class ManagerClient<P extends ParamsBase, TE> extends BaseClient
 
     protected openNewWebSocket(): WebSocket {
         if (this.ws && this.ws.readyState === this.ws.OPEN) {
+	    console.log('[ManagerClient.ts] ws new close before');
             this.ws.close();
         }
+        console.log('[ManagerClient.ts] ws new '+this.url.toString());
         this.ws = new WebSocket(this.url.toString());
         this.ws.onopen = this.onSocketOpen.bind(this);
         this.ws.onmessage = this.onSocketMessage.bind(this);
@@ -38,6 +40,7 @@ export abstract class ManagerClient<P extends ParamsBase, TE> extends BaseClient
     }
 
     public destroy(): void {
+	console.log('[ManagerClient.ts] ws destroy');
         if (this.ws) {
             this.ws.onopen = null;
             this.ws.onmessage = null;

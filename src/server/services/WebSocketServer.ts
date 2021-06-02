@@ -48,6 +48,7 @@ export class WebSocketServer implements Service {
                 }
             }
             if (!processed) {
+ 		console.log('[WebSocketServer.ts] close ws');
                 ws.close(4002, `[${this.getName()}] Unsupported request`);
             }
             return;

@@ -18,6 +18,7 @@ export class StreamProxy extends Mw {
             return;
         }
         const udid = typeof list === 'string' ? list : list[0];
+        console.log('[processRequest] streamproxy');
         return new StreamProxy(ws, udid);
     }
 
@@ -26,6 +27,7 @@ export class StreamProxy extends Mw {
     protected name: string;
     constructor(ws: WebSocket, private readonly udid: string) {
         super(ws);
+        console.log('[streamproxy.ts] init');
         this.name = `[${StreamProxy.TAG}][udid: ${this.udid}]`;
         this.qvhProcess = QvhackRunner.getInstance(udid);
         this.attachEventListeners();
@@ -33,19 +35,26 @@ export class StreamProxy extends Mw {
 
     private onStarted = (): void => {
         const remote = this.qvhProcess.getWebSocketAddress();
+        console.log('[streamproxy.ts] create ws');
+	let t1 = (new Date()).getTime();
+	while((new Date()).getTime()-t1<10000);
+	console.log('[streamproxy.ts] now create');
         this.wsProxy = WebsocketProxy.createProxy(this.ws, remote);
         this.ws.onclose = this.onSocketClose.bind(this);
     };
 
     private attachEventListeners(): void {
         if (this.qvhProcess.isStarted()) {
+            console.log('[streamproxy][qvh start check] true');
             this.onStarted();
         } else {
+	    console.log('[streamproxy][qvh start check] false');
             this.qvhProcess.once('started', this.onStarted);
         }
     }
 
     protected onSocketMessage(event: WebSocket.MessageEvent): void {
+        console.log('[streamproxy.ts] recv '+event.data.toString());
         let command: ControlCenterCommand;
         try {
             command = ControlCenterCommand.fromJSON(event.data.toString());
@@ -57,15 +66,18 @@ export class StreamProxy extends Mw {
     }
 
     protected onSocketClose(): void {
-        if (this.wsProxy) {
-            this.wsProxy.release();
-        }
-        this.release();
+        console.log('[streamproxy.ts] on ws close');
+        //if (this.wsProxy) {
+        //    this.wsProxy.release();
+        //}
+        //this.release();
     }
 
     public release(): void {
         super.release();
+	console.log('[streamproxy.ts] release');
         if (this.qvhProcess) {
+	    console.log('[streamproxy.ts] qvhprocess release');
             this.qvhProcess.release();
             delete this.qvhProcess;
         }
